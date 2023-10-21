@@ -1,10 +1,11 @@
 import string
 import random
+
+from flask import flash, redirect, render_template, url_for
+
 from . import app, db
 from .forms import YacutForm
 from .models import URLMap
-
-from flask import flash, redirect, render_template, url_for
 
 
 def get_unique_short_id():

@@ -1,6 +1,6 @@
 from flask import jsonify, render_template
 
-from . import app, db
+from . import app
 
 
 class InvalidAPIUsage(Exception):
@@ -13,10 +13,10 @@ class InvalidAPIUsage(Exception):
             self.status_code = status_code
 
     def to_dict(self):
-        return dict(message = self.message)
+        return dict(message=self.message)
 
 
-@app.errorhandler(InvalidAPIUsage) 
+@app.errorhandler(InvalidAPIUsage)
 def invalid_api_usage(error):
     # Возвращает в ответе текст ошибки и статус-код
     return jsonify(error.to_dict()), error.status_code
@@ -25,9 +25,3 @@ def invalid_api_usage(error):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
-
-
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return render_template('500.html'), 500
