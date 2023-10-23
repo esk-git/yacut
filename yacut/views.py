@@ -1,4 +1,3 @@
-import string
 import random
 
 from flask import flash, redirect, render_template, url_for
@@ -6,12 +5,17 @@ from flask import flash, redirect, render_template, url_for
 from . import app, db
 from .forms import YacutForm
 from .models import URLMap
+from settings import ALLOWED_CHARACTERS, MAX_ATTEMPTS_CREATE_AUTO_SHORT_ID, AUTO_SHORT_ID_LENGTH
 
 
 def get_unique_short_id():
+    attempt = 0
     while True:
+        attempt += 1
+        if attempt > MAX_ATTEMPTS_CREATE_AUTO_SHORT_ID:
+            break
         short_id = ''.join(
-            random.choices(string.ascii_letters + string.digits, k=6)
+            random.choices(ALLOWED_CHARACTERS, k=AUTO_SHORT_ID_LENGTH)
         )
         if not URLMap.query.filter_by(short=short_id).first():
             return short_id
